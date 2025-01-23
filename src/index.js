@@ -3,6 +3,8 @@ import Project from "../factories/Project.js";
 import ProjectManager from "../managers/ProjectManager.js";
 import Task from "../factories/Task.js";
 import TaskManager from "../managers/TaskManager.js";
+import SubTask from "../factories/SubTask.js";
+import SubTaskManager from "../managers/SubTaskManager.js";
 
 // Initialize the app
 console.log("Welcome to Todo App!");
@@ -11,7 +13,7 @@ TaskManager.loadTasks();
 
 const promptUser = () => {
   const userInput = prompt(
-    "What would you like to do? (add project, delete project, view projects, add task, delete task, view tasks, exit)"
+    "What would you like to do? (add project, delete project, view projects, add task, delete task, view tasks, add subtask, delete subtask, view subtasks, exit)"
   );
 
   switch (userInput) {
@@ -86,6 +88,50 @@ const promptUser = () => {
       }
       break;
 
+      case "add subtask":
+        const parentTaskTitle = prompt("Enter the parent task title:");
+        const taskExists = TaskManager.getTasks().some(
+          (task) => task.getTask().taskTitle === parentTaskTitle
+        );
+  
+        if (!taskExists) {
+          console.log(`Task "${parentTaskTitle}" does not exist!`);
+          break;
+        }
+  
+        const subTaskDescription = prompt("Enter the subtask description:");
+        const newSubTask = SubTask(parentTaskTitle, subTaskDescription);
+        SubTaskManager.addSubTask(newSubTask);
+        console.log(`SubTask "${subTaskDescription}" added to task "${parentTaskTitle}".`);
+        break;
+  
+      case "delete subtask":
+        const subTaskDescriptionToDelete = prompt("Enter the subtask description to delete:");
+        const wasSubTaskDeleted = SubTaskManager.deleteSubTask(subTaskDescriptionToDelete);
+        if (wasSubTaskDeleted) {
+          console.log(`SubTask "${subTaskDescriptionToDelete}" deleted successfully.`);
+        } else {
+          console.log(`Unable to delete subtask "${subTaskDescriptionToDelete}". It does not exist.`);
+        }
+        break;
+  
+      case "view subtasks":
+        const taskToViewSubTasks = prompt("Enter the parent task title to view subtasks:");
+        const subTasks = SubTaskManager.getSubTasksByTask(taskToViewSubTasks);
+  
+        if (subTasks.length === 0) {
+          console.log(`No subtasks found for task "${taskToViewSubTasks}".`);
+        } else {
+          console.log(`SubTasks for task "${taskToViewSubTasks}":`);
+          subTasks.forEach((subTask, index) => {
+            const details = subTask.getSubTask();
+            console.log(
+              `${index + 1}: ${details.subTaskDescription} (Complete: ${details.isComplete})`
+            );
+          });
+        }
+        break;
+  
     case "exit":
       console.log("Exiting Todo App. Goodbye!");
       return;
