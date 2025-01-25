@@ -40,6 +40,7 @@ const createSideBar = () => {
     projectsHeadingContainer.appendChild(projectsHeading);
 
     const addProjectButton = document.createElement('button');
+    addProjectButton.classList.add('add-project-btn');
     addProjectButton.textContent = '+';
 
     projectsHeadingContainer.appendChild(addProjectButton);
@@ -57,6 +58,7 @@ const createSideBar = () => {
         const projectItem = document.createElement('button');
         projectItem.classList.add('project-item-btn');
         projectItem.textContent = project.title;
+        projectItem.id = project.id;
         projectList.appendChild(projectItem);
     })
 
