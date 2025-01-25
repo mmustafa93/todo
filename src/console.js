@@ -346,4 +346,4 @@ const promptUser = () => {
 
 promptUser();
 
-export default promptUser;
+export { promptUser };

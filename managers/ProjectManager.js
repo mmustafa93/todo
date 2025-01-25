@@ -14,7 +14,7 @@ const ProjectManager = (() => {
   };
 
   const addProject = (project) => {
-    const projects = loadProjects();
+    const projects = loadProjects() || [];
     if (projects.some((savedProject) => savedProject.title === project.title)) {
       console.log(`Project "${project.title}" already exists!`);
       return false; // Indicates failure due to duplicate title
