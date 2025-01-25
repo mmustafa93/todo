@@ -1,6 +1,16 @@
 // factories/SubTask.js
-const SubTask = (parentTaskTitle, subTaskDescription, isComplete = false) => {
-    let subTaskDetails = {
+
+const generateId = () => {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+};
+
+
+const SubTask = (existingId = null, parentTaskTitle, subTaskDescription, isComplete = false) => {
+  
+  const id = existingId || generateId();
+  
+  let subTaskDetails = {
+      id,
       parentTaskTitle,
       subTaskDescription,
       isComplete,

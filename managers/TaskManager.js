@@ -1,54 +1,69 @@
-// managers/TaskManager.js
 import Task from "../factories/Task.js";
 
 const TaskManager = (() => {
-  const tasks = [];
-
   const loadTasks = () => {
-    const savedTasks = JSON.parse(localStorage.getItem("task")) || [];
-    savedTasks.forEach((taskData) => {
-      const task = Task(
+    const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    return savedTasks.map((taskData) =>
+      Task(
+        taskData.id,
         taskData.projectTitle,
         taskData.taskTitle,
         taskData.taskDescription,
         taskData.dueDate,
-        taskData.priority
-      );
-      tasks.push(task);
-      console.log(`Loaded Task "${taskData.taskTitle}"`);
-    });
+        taskData.priority,
+      )
+    );
   };
 
-  const saveTasks = () => {
+  const saveTasks = (tasks) => {
     const taskData = tasks.map((task) => task.getTask());
-    localStorage.setItem("task", JSON.stringify(taskData));
+    localStorage.setItem("tasks", JSON.stringify(taskData));
   };
 
   const addTask = (task) => {
+    const tasks = loadTasks();
     tasks.push(task);
-    saveTasks();
+    saveTasks(tasks);
   };
 
-  const deleteTask = (taskTitle) => {
-    const index = tasks.findIndex((task) => task.getTask().taskTitle === taskTitle);
+  const deleteTask = (taskId) => {
+    let tasks = loadTasks();
+    const index = tasks.findIndex((task) => task.getTask().id === taskId);
 
     if (index !== -1) {
       tasks.splice(index, 1);
-      saveTasks();
-      console.log(`Task "${taskTitle}" deleted successfully.`);
+      saveTasks(tasks);
+      console.log(`Task with ID "${taskId}" deleted successfully.`);
       return true;
     } else {
-      console.log(`Task "${taskTitle}" not found.`);
+      console.log(`Task with ID "${taskId}" not found.`);
       return false;
     }
   };
 
-  const getTasksByProject = (projectTitle) =>
-    tasks.filter((task) => task.getTask().projectTitle === projectTitle);
+  const getTasksByProject = (projectTitle) => {
+    const tasks = loadTasks();
+    return tasks.filter((task) => task.getTask().projectTitle === projectTitle);
+  };
 
-  const getTasks = () => tasks;
+  const getTasks = () => loadTasks();
 
-  return { loadTasks, addTask, deleteTask, getTasksByProject, getTasks };
+  const updateTask = (taskId, updatedFields) => {
+    let tasks = loadTasks();
+    const task = tasks.find((task) => task.getTask().id === taskId);
+
+    if (task) {
+      task.updateTask(updatedFields);
+      saveTasks(tasks);
+      console.log(`Task with ID "${taskId}" updated successfully.`);
+      return true;
+    } else {
+      console.log(`Task with ID "${taskId}" not found.`);
+      return false;
+    }
+  };
+
+  return { addTask, deleteTask, getTasksByProject, getTasks, updateTask, loadTasks };
 })();
 
 export default TaskManager;

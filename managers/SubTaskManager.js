@@ -1,57 +1,80 @@
-// managers/SubTaskManager.js
 import SubTask from "../factories/SubTask.js";
 
 const SubTaskManager = (() => {
-  const subTasks = [];
-
   const loadSubTasks = () => {
     const savedSubTasks = JSON.parse(localStorage.getItem("subTasks")) || [];
-    savedSubTasks.forEach((subTaskData) => {
-      const subTask = SubTask(
+    return savedSubTasks.map((subTaskData) =>
+      SubTask(
+        subTaskData.id,
         subTaskData.parentTaskTitle,
         subTaskData.subTaskDescription,
         subTaskData.isComplete
-      );
-      subTasks.push(subTask);
-      console.log(`Loaded SubTask: "${subTaskData.subTaskDescription}"`);
-    });
+      )
+    );
   };
 
-  const saveSubTasks = () => {
+  const saveSubTasks = (subTasks) => {
     const subTaskData = subTasks.map((subTask) => subTask.getSubTask());
     localStorage.setItem("subTasks", JSON.stringify(subTaskData));
   };
 
   const addSubTask = (subTask) => {
-    subTasks.push(subTask);
-    saveSubTasks();
+    const currentSubTasks = loadSubTasks();
+    currentSubTasks.push(subTask);
+    saveSubTasks(currentSubTasks);
     console.log(`SubTask "${subTask.getSubTask().subTaskDescription}" added.`);
   };
 
-  const deleteSubTask = (subTaskDescription) => {
-    const index = subTasks.findIndex(
-      (subTask) => subTask.getSubTask().subTaskDescription === subTaskDescription
+  const deleteSubTask = (id) => {
+    let currentSubTasks = loadSubTasks();
+    const index = currentSubTasks.findIndex(
+      (subTask) => subTask.getSubTask().id === id
     );
 
     if (index !== -1) {
-      subTasks.splice(index, 1);
-      saveSubTasks();
-      console.log(`SubTask "${subTaskDescription}" deleted successfully.`);
+      currentSubTasks.splice(index, 1);
+      saveSubTasks(currentSubTasks);
+      console.log(`SubTask with ID "${id}" deleted successfully.`);
       return true;
     } else {
-      console.log(`SubTask "${subTaskDescription}" not found.`);
+      console.log(`SubTask with ID "${id}" not found.`);
       return false;
     }
   };
 
-  const getSubTasksByTask = (parentTaskTitle) =>
-    subTasks.filter(
-      (subTask) => subTask.getSubTask().parentTaskTitle === parentTaskTitle
+  const updateSubTask = (id, updatedFields) => {
+    const currentSubTasks = loadSubTasks();
+    const subTask = currentSubTasks.find(
+      (subTask) => subTask.getSubTask().id === id
     );
 
-  const getAllSubTasks = () => subTasks;
+    if (subTask) {
+      subTask.updateSubTask(updatedFields);
+      saveSubTasks(currentSubTasks);
+      console.log(`SubTask with ID "${id}" updated successfully.`);
+      return true;
+    } else {
+      console.log(`SubTask with ID "${id}" not found.`);
+      return false;
+    }
+  };
 
-  return { loadSubTasks, addSubTask, deleteSubTask, getSubTasksByTask, getAllSubTasks };
+  const getSubTasksByTask = (parentTaskTitle) => {
+    const currentSubTasks = loadSubTasks();
+    return currentSubTasks.filter(
+      (subTask) => subTask.getSubTask().parentTaskTitle === parentTaskTitle
+    );
+  };
+
+  const getAllSubTasks = () => loadSubTasks();
+
+  return {
+    addSubTask,
+    deleteSubTask,
+    updateSubTask,
+    getSubTasksByTask,
+    getAllSubTasks,
+  };
 })();
 
 export default SubTaskManager;
