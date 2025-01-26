@@ -49,8 +49,8 @@ taskDialog.innerHTML = `
             </select>
         </div>
         <div>
-            <button id="cancel-project-btn">Cancel</button>
-            <button id="save-project-btn">Save</button>
+            <button id="cancel-task-btn">Cancel</button>
+            <button id="save-task-btn">Save</button>
         </div>
     </form>
 `
@@ -96,7 +96,7 @@ viewProjectsBtn.forEach((button) => {
     button.addEventListener('click', (event) => {
         mainContent.textContent = "";
         mainContent.innerHTML = `
-            <h2>${event.target.textContent}</h2>
+            <h2 class="project-title">${event.target.textContent}</h2>
             <button class="add-task-btn">Add Task</button>
             <ul id="task-list"></ul>
         `;
@@ -109,4 +109,58 @@ viewProjectsBtn.forEach((button) => {
     });
 });
 
+const cancelTaskBtn = document.getElementById('cancel-task-btn');
+cancelTaskBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    taskDialog.close();
+    console.log('Cancel task button clicked');
+});
 
+const tasksContainer = document.getElementById('tasks-container');
+const saveTaskBtn = document.getElementById('save-task-btn');
+saveTaskBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    console.log('Save task button clicked');
+
+    // Get task details from the form
+    const taskTitle = document.getElementById('task-title').value;
+    const taskDescription = document.getElementById('description').value;
+    const dueDate = document.getElementById('duedate').value;
+    const priority = document.getElementById('priority').value;
+    const projectTitle = document.querySelector('.project-title').textContent;
+
+    // Create a new task using the Task factory
+    const newTask = Task(null, projectTitle, taskTitle, taskDescription, dueDate, priority);
+
+    // Add the task to TaskManager
+    TaskManager.addTask(newTask);
+
+    // Load all tasks from TaskManager
+    const allTasks = TaskManager.loadTasks();
+    let currentSavedTasks = []
+    allTasks.forEach((task) => {
+        currentSavedTasks.push(task.getTask());
+        //console.log(tData);
+    }); 
+
+    // Filter tasks for the current project
+    const currentProjectTasks = currentSavedTasks.filter((task) => task.projectTitle === projectTitle);
+    //console.log(currentProjectTasks)
+    // Render each task for the current project
+    currentProjectTasks.forEach((task) => {
+        console.log(task.taskTitle);
+        //const taskSection = document.createElement('section');
+        mainContent.innerHTML += `
+            <h3>${task.taskTitle}</h3>
+            <p>${task.taskDescription}</p>
+            <p>${task.dueDate}</p>
+            <p>${task.priority}</p>
+            <button>Edit</button>
+            <button>Delete</button>
+        `;
+        //tasksContainer.appendChild(taskSection);
+    });
+
+    // Close the task dialog
+    taskDialog.close();
+});

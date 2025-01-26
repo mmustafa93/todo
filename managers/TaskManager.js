@@ -3,17 +3,21 @@ import Task from "../factories/Task.js";
 const TaskManager = (() => {
   const loadTasks = () => {
     const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    return savedTasks.map((taskData) =>
-      Task(
-        taskData.id,
-        taskData.projectTitle,
-        taskData.taskTitle,
-        taskData.taskDescription,
-        taskData.dueDate,
-        taskData.priority,
-      )
-    );
-  };
+    
+    return savedTasks.map((taskData) => {
+        // Create Task instance for each task in savedTasks
+        const task = Task(
+            taskData.id,
+            taskData.projectTitle,
+            taskData.taskTitle,
+            taskData.taskDescription,
+            taskData.dueDate,
+            taskData.priority
+        )
+
+        return task; // return Task instance
+    });
+};
 
   const saveTasks = (tasks) => {
     const taskData = tasks.map((task) => task.getTask());
