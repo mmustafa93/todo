@@ -94,12 +94,33 @@ saveProjectBtn.addEventListener('click', (event) => {
 const viewProjectsBtn = document.querySelectorAll('.project-item-btn');
 viewProjectsBtn.forEach((button) => {
     button.addEventListener('click', (event) => {
+        const allTasks = TaskManager.loadTasks();
+        let currentSavedTasks = []
+        allTasks.forEach((task) => {
+            currentSavedTasks.push(task.getTask());
+            //console.log(tData);
+        }); 
+    
+        // Filter tasks for the current project
+        const currentProjectTasks = currentSavedTasks.filter((task) => task.projectTitle === event.target.textContent);
         mainContent.textContent = "";
         mainContent.innerHTML = `
             <h2 class="project-title">${event.target.textContent}</h2>
             <button class="add-task-btn">Add Task</button>
             <ul id="task-list"></ul>
         `;
+        currentProjectTasks.forEach((task) => {
+            const taskSection = document.createElement('section');
+            taskSection.innerHTML = `
+                <h3>${task.taskTitle}</h3>
+                <p>${task.taskDescription}</p>
+                <p>${task.dueDate}</p>
+                <p>${task.priority}</p>
+                <button>Edit</button>
+                <button>Delete</button>
+            `;
+            mainContent.appendChild(taskSection);
+        })
         const addTaskBtn = document.getElementsByClassName('add-task-btn');
         console.log(addTaskBtn[0]);
         addTaskBtn[0].addEventListener('click', () => {
