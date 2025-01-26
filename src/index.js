@@ -158,29 +158,53 @@ saveTaskBtn.addEventListener('click', (event) => {
 
     // Load all tasks from TaskManager
     const allTasks = TaskManager.loadTasks();
-    let currentSavedTasks = []
-    allTasks.forEach((task) => {
-        currentSavedTasks.push(task.getTask());
+
+    let currentSavedTask = [];
+
+    if (allTasks.length > 0) {
+    
+    const lastTask = allTasks[allTasks.length - 1]; // Get the last task
+    currentSavedTask.push(lastTask.getTask()); // Push its details into currentSavedTask
+    console.log(currentSavedTask);
+}
+    //allTasks.forEach((task) => {
+    //    currentSavedTasks.push(task.getTask());
         //console.log(tData);
-    }); 
+    //}); 
 
     // Filter tasks for the current project
-    const currentProjectTasks = currentSavedTasks.filter((task) => task.projectTitle === projectTitle);
-    //console.log(currentProjectTasks)
+    const currentProjectTask = currentSavedTask[0].projectTitle === projectTitle ? currentSavedTask : [];
+    console.log(currentProjectTask);
+    console.log(projectTitle);
+    console.log(currentProjectTask.length)
     // Render each task for the current project
-    currentProjectTasks.forEach((task) => {
-        console.log(task.taskTitle);
-        //const taskSection = document.createElement('section');
+
+    if (currentProjectTask.length) {
         mainContent.innerHTML += `
-            <h3>${task.taskTitle}</h3>
-            <p>${task.taskDescription}</p>
-            <p>${task.dueDate}</p>
-            <p>${task.priority}</p>
+            <h3>${currentProjectTask[0].taskTitle}</h3>
+            <p>${currentProjectTask[0].taskDescription}</p>
+            <p>${currentProjectTask[0].dueDate}</p>
+            <p>${currentProjectTask[0].priority}</p>
             <button>Edit</button>
             <button>Delete</button>
         `;
+    } else {
+        console.log('No tasks found for this project');
+        return;
+    }
+   // currentProjectTasks.forEach((task) => {
+     //   console.log(task.taskTitle);
+        //const taskSection = document.createElement('section');
+       // mainContent.innerHTML += `
+         //   <h3>${task.taskTitle}</h3>
+           // <p>${task.taskDescription}</p>
+           // <p>${task.dueDate}</p>
+           // <p>${task.priority}</p>
+            //<button>Edit</button>
+          //  <button>Delete</button>
+        //`;
         //tasksContainer.appendChild(taskSection);
-    });
+    //});
 
     // Close the task dialog
     taskDialog.close();
