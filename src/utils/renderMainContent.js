@@ -16,6 +16,7 @@ const renderMainContent = (projectTitle = "", currentProjectTasks = []) => {
         mainContent.textContent = "";
         mainContent.innerHTML = `
             <h2 class="project-title">${projectTitle}</h2>
+            ${projectTitle !== "Default" ? `<button class="edit-project-title">Edit Project Title</button>` : ""}
             <button class="add-task-btn">Add Task</button>
             ${projectTitle !== "Default" ? `<button class="delete-project-btn">Delete Project</button>` : ""}
             <ul id="task-list"></ul>

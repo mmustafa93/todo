@@ -44,6 +44,13 @@ const saveProjectBtn = document.getElementById('save-project-btn');
 saveProjectBtn.addEventListener('click', (event) => {
     event.preventDefault();
     const projectTitle = document.getElementById('project-title').value;
+    const savedProjects = ProjectManager.loadProjects();
+    const isTitleTaken = savedProjects.some((project) => project.title === projectTitle);
+    if (isTitleTaken){
+        alert('Project title already exists. Choose another title.');
+        return;
+    }
+    console.log(savedProjects);
     const newProject = Project(projectTitle);
     ProjectManager.addProject(newProject);
     const projectListContainer = document.querySelector(".project-list");
@@ -74,7 +81,6 @@ const viewProjects = () => {
         const addTaskBtn = document.querySelector('.add-task-btn');
         console.log(addTaskBtn);
         taskListener(addTaskBtn);
-        
     });
 });
 }

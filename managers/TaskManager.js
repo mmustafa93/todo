@@ -21,6 +21,7 @@ const TaskManager = (() => {
 
   const saveTasks = (tasks) => {
     const taskData = tasks.map((task) => task.getTask());
+    console.log(taskData);
     localStorage.setItem("tasks", JSON.stringify(taskData));
   };
 
@@ -32,6 +33,7 @@ const TaskManager = (() => {
 
   const deleteTask = (taskId) => {
     let tasks = loadTasks();
+    console.log(tasks);
     const index = tasks.findIndex((task) => task.getTask().id === taskId);
 
     if (index !== -1) {
