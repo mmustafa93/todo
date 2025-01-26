@@ -4,80 +4,40 @@ import Project from '../factories/Project.js';
 import ProjectManager from '../managers/ProjectManager.js';
 import Task from "../factories/Task.js";
 import TaskManager from "../managers/TaskManager.js";
+import { renderProjectsList } from './utils/renderProjectsList.js';
+import { renderProjectDialog } from './utils/renderProjectDialog.js';
+import { renderTaskDialog } from './utils/renderTaskDialog.js';
+import { renderMainContent } from './utils/renderMainContent.js';
 
 createSideBar();
+renderProjectDialog();
+renderTaskDialog()
 
-const projectDialog = document.createElement('dialog');
-projectDialog.id = 'project-dialog';
-projectDialog.innerHTML = `
-    <h4>Add New Project</h4>
-    <form class="form-container">
-        <div>
-            <label for="project-title">Project Title:</label>
-            <input type="text" id="project-title" name="project-title" autofocus>
-        </div>
-        <div>
-            <button id="cancel-project-btn">Cancel</button>
-            <button id="save-project-btn">Save</button>
-        </div>
-    </form>
-`
-
-const taskDialog = document.createElement('dialog');
-taskDialog.id = 'task-dialog';
-taskDialog.innerHTML = `
-    <h4>Add New Task</h4>
-    <form class="form-container">
-        <div>
-            <label for="task-title">Task Title:</label>
-            <input type="text" id="task-title" name="task-title" autofocus>
-        </div>
-        <div>
-            <label for="description">Task Description:</label>
-            <input type="text" id="description" name="description" autofocus>
-        </div>
-        <div>
-            <label for="duedate">Due Date:</label>
-            <input type="text" id="duedate" name="duedate" autofocus>
-        </div>
-        <div>
-            <label for="priority">Task Description:</label>
-            <select name="priority" id="priority">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-        </div>
-        <div>
-            <button id="cancel-task-btn">Cancel</button>
-            <button id="save-task-btn">Save</button>
-        </div>
-    </form>
-`
-
-// Append the dialog to the document body
-document.body.appendChild(projectDialog);
-document.body.appendChild(taskDialog);
-
-
+const projectDialog = document.getElementById('project-dialog');
+const taskDialog = document.getElementById('task-dialog');
 const mainContent = document.getElementById('content');
-const welcomeHeading = document.createElement('h1');
-welcomeHeading.textContent = 'Welcome to your To Do App!';
-mainContent.appendChild(welcomeHeading);
+
+renderMainContent();
+
+const taskListener = (addTaskBtn) => addTaskBtn.addEventListener('click', () => {
+    document.getElementById('task-title').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('duedate').value = '';
+    document.getElementById('priority').value = 'low';
+    taskDialog.showModal();
+    console.log('Add task button clicked');
+})
 
 const addProjectBtn = document.getElementsByClassName("add-project-btn");
 
 addProjectBtn[0].addEventListener('click', () => {
     projectDialog.showModal();
-    
-    console.log('Add project button clicked');
 });
 
 const cancelProjectBtn = document.getElementById('cancel-project-btn');
 cancelProjectBtn.addEventListener('click', (event) => {
     event.preventDefault();
     projectDialog.close();
-    console.log('Cancel project button clicked');
 });
 
 const saveProjectBtn = document.getElementById('save-project-btn');
@@ -86,13 +46,18 @@ saveProjectBtn.addEventListener('click', (event) => {
     const projectTitle = document.getElementById('project-title').value;
     const newProject = Project(projectTitle);
     ProjectManager.addProject(newProject);
+    const projectListContainer = document.querySelector(".project-list");
+    renderProjectsList(projectListContainer);
     projectDialog.close();
+    renderMainContent(projectTitle);
+    viewProjects()
     console.log('Save project button clicked');
     console.log(ProjectManager.loadProjects()[0].title);
 });
 
-const viewProjectsBtn = document.querySelectorAll('.project-item-btn');
-viewProjectsBtn.forEach((button) => {
+const viewProjects = () => {
+    const viewProjectsBtn = document.querySelectorAll('.project-item-btn');
+    viewProjectsBtn.forEach((button) => {
     button.addEventListener('click', (event) => {
         const allTasks = TaskManager.loadTasks();
         let currentSavedTasks = []
@@ -103,32 +68,19 @@ viewProjectsBtn.forEach((button) => {
     
         // Filter tasks for the current project
         const currentProjectTasks = currentSavedTasks.filter((task) => task.projectTitle === event.target.textContent);
-        mainContent.textContent = "";
-        mainContent.innerHTML = `
-            <h2 class="project-title">${event.target.textContent}</h2>
-            <button class="add-task-btn">Add Task</button>
-            <ul id="task-list"></ul>
-        `;
-        currentProjectTasks.forEach((task) => {
-            const taskSection = document.createElement('section');
-            taskSection.innerHTML = `
-                <h3>${task.taskTitle}</h3>
-                <p>${task.taskDescription}</p>
-                <p>${task.dueDate}</p>
-                <p>${task.priority}</p>
-                <button>Edit</button>
-                <button>Delete</button>
-            `;
-            mainContent.appendChild(taskSection);
-        })
-        const addTaskBtn = document.getElementsByClassName('add-task-btn');
-        console.log(addTaskBtn[0]);
-        addTaskBtn[0].addEventListener('click', () => {
-            taskDialog.showModal();
-            console.log('Add task button clicked');
-        })
+        console.log(currentProjectTasks);
+        renderMainContent(event.target.textContent, currentProjectTasks);
+        
+        const addTaskBtn = document.querySelector('.add-task-btn');
+        console.log(addTaskBtn);
+        taskListener(addTaskBtn);
+        
     });
 });
+}
+
+viewProjects();
+
 
 const cancelTaskBtn = document.getElementById('cancel-task-btn');
 cancelTaskBtn.addEventListener('click', (event) => {
@@ -188,23 +140,12 @@ saveTaskBtn.addEventListener('click', (event) => {
             <button>Edit</button>
             <button>Delete</button>
         `;
+        const addTaskBtn = document.querySelector('.add-task-btn');
+        taskListener(addTaskBtn);
     } else {
         console.log('No tasks found for this project');
         return;
     }
-   // currentProjectTasks.forEach((task) => {
-     //   console.log(task.taskTitle);
-        //const taskSection = document.createElement('section');
-       // mainContent.innerHTML += `
-         //   <h3>${task.taskTitle}</h3>
-           // <p>${task.taskDescription}</p>
-           // <p>${task.dueDate}</p>
-           // <p>${task.priority}</p>
-            //<button>Edit</button>
-          //  <button>Delete</button>
-        //`;
-        //tasksContainer.appendChild(taskSection);
-    //});
 
     // Close the task dialog
     taskDialog.close();

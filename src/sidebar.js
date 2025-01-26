@@ -1,6 +1,7 @@
 import './styles.css';
 import ProjectManager from '../managers/ProjectManager.js';
 import Project from '../factories/Project.js';
+import { renderProjectsList } from './utils/renderProjectsList.js';
 
 const sidebar = document.getElementById('nav');
 
@@ -45,25 +46,18 @@ const createSideBar = () => {
 
     projectsHeadingContainer.appendChild(addProjectButton);
 
-    const projectList = document.createElement('ul');
+    const projectListContainer = document.createElement('ul');
+    projectListContainer.classList.add('project-list');
 
     if (!ProjectManager.loadProjects().length) {
         const zeroProject = Project('Default');
         ProjectManager.addProject(zeroProject);
     }
-
-    const allProjects = ProjectManager.loadProjects();
-
-    allProjects.forEach((project) => {
-        const projectItem = document.createElement('button');
-        projectItem.classList.add('project-item-btn');
-        projectItem.textContent = project.title;
-        projectItem.id = project.id;
-        projectList.appendChild(projectItem);
-    })
+    
+    const updatedProjectListContainer = renderProjectsList(projectListContainer);
 
     projectsSection.appendChild(projectsHeadingContainer);
-    projectsSection.appendChild(projectList);
+    projectsSection.appendChild(updatedProjectListContainer);
 
     // Append sections to the header
     sidebar.appendChild(tasksSection);

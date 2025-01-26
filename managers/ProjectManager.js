@@ -48,17 +48,15 @@ const ProjectManager = (() => {
     return true; // Indicates successful update
   };
 
-  const deleteProject = (title) => {
+  const deleteProject = (id) => {
     const projects = loadProjects();
-    const updatedProjects = projects.filter((project) => project.title !== title);
+    const updatedProjects = projects.filter((project) => project.id !== id);
 
     if (projects.length === updatedProjects.length) {
-      console.log(`Project "${title}" not found!`);
       return false; // Indicates the project was not found
     }
 
     saveProjects(updatedProjects);
-    console.log(`Project "${title}" deleted successfully.`);
     return true; // Indicates successful deletion
   };
 
