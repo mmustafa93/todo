@@ -4,21 +4,14 @@ const generateId = () => {
   
 const Project = (title, existingId = null) => {
 const id = existingId || generateId(); // Use existing ID if provided, otherwise generate a new one
-const tasks = [];
-
-const addTask = (task) => {
-    tasks.push(task);
-};
-
-const getTasks = () => tasks;
 
 const updateTitle = (newTitle) => {
     title = newTitle;
 };
 
-const getProject = () => ({ id, title, tasks });
+const getProject = () => ({ id, title });
 
-return { id, title, addTask, getTasks, updateTitle, getProject };
+return { id, title, updateTitle, getProject };
 };
 
 export default Project;
