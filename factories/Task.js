@@ -4,17 +4,17 @@ const generateId = () => {
   };
   
 
-const Task = (existingId = null, projectTitle, taskTitle, taskDescription = "", dueDate = "", priority = "") => {
+const Task = (existingId = null, projectId, taskTitle, taskDescription = "", dueDate = "", priority = "") => {
 
     const id = existingId || generateId();
 
     let taskDetails = {
-      projectTitle,
+      id,
+      projectId,
       taskTitle,
       taskDescription,
       dueDate,
       priority,
-      id,
     };
   
     const getTask = () => taskDetails;

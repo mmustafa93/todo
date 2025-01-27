@@ -84,10 +84,10 @@ saveTaskBtn.addEventListener('click', (event) => {
     const taskDescription = document.getElementById('description').value;
     const dueDate = document.getElementById('duedate').value;
     const priority = document.getElementById('priority').value;
-    const projectTitle = document.querySelector('.project-title').textContent;
+    const projectId = document.querySelector('.project-title').id;
 
     // Create a new task using the Task factory
-    const newTask = Task(null, projectTitle, taskTitle, taskDescription, dueDate, priority);
+    const newTask = Task(null, projectId, taskTitle, taskDescription, dueDate, priority);
 
     // Add the task to TaskManager
     TaskManager.addTask(newTask);
@@ -109,9 +109,9 @@ saveTaskBtn.addEventListener('click', (event) => {
     //}); 
 
     // Filter tasks for the current project
-    const currentProjectTask = currentSavedTask[0].projectTitle === projectTitle ? currentSavedTask : [];
+    const currentProjectTask = currentSavedTask[0].projectId === projectId ? currentSavedTask : [];
     console.log(currentProjectTask);
-    console.log(projectTitle);
+    console.log(projectId);
     console.log(currentProjectTask.length)
     // Render each task for the current project
 

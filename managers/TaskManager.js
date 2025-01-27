@@ -8,7 +8,7 @@ const TaskManager = (() => {
         // Create Task instance for each task in savedTasks
         const task = Task(
             taskData.id,
-            taskData.projectTitle,
+            taskData.projectId,
             taskData.taskTitle,
             taskData.taskDescription,
             taskData.dueDate,
@@ -47,9 +47,9 @@ const TaskManager = (() => {
     }
   };
 
-  const getTasksByProject = (projectTitle) => {
+  const getTasksByProject = (projectId) => {
     const tasks = loadTasks();
-    return tasks.filter((task) => task.getTask().projectTitle === projectTitle);
+    return tasks.filter((task) => task.getTask().projectId === projectId);
   };
 
   const getTasks = () => loadTasks();
