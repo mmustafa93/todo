@@ -32,6 +32,7 @@ export const taskListener = (addTaskBtn) => addTaskBtn.addEventListener('click',
 const addProjectBtn = document.getElementsByClassName("add-project-btn");
 
 addProjectBtn[0].addEventListener('click', () => {
+    document.getElementById("project-title").value = ""
     projectDialog.showModal();
 });
 
@@ -91,46 +92,11 @@ saveTaskBtn.addEventListener('click', (event) => {
 
     // Add the task to TaskManager
     TaskManager.addTask(newTask);
-
-    // Load all tasks from TaskManager
-    const allTasks = TaskManager.loadTasks();
-
-    let currentSavedTask = [];
-
-    if (allTasks.length > 0) {
     
-    const lastTask = allTasks[allTasks.length - 1]; // Get the last task
-    currentSavedTask.push(lastTask.getTask()); // Push its details into currentSavedTask
-    console.log(currentSavedTask);
-}
-    //allTasks.forEach((task) => {
-    //    currentSavedTasks.push(task.getTask());
-        //console.log(tData);
-    //}); 
-
-    // Filter tasks for the current project
-    const currentProjectTask = currentSavedTask[0].projectId === projectId ? currentSavedTask : [];
-    console.log(currentProjectTask);
-    console.log(projectId);
-    console.log(currentProjectTask.length)
-    // Render each task for the current project
-
-    if (currentProjectTask.length) {
-        mainContent.innerHTML += `
-            <h3>${currentProjectTask[0].taskTitle}</h3>
-            <p>${currentProjectTask[0].taskDescription}</p>
-            <p>${currentProjectTask[0].dueDate}</p>
-            <p>${currentProjectTask[0].priority}</p>
-            <button>Edit</button>
-            <button>Delete</button>
-        `;
-        const addTaskBtn = document.querySelector('.add-task-btn');
-        taskListener(addTaskBtn);
-    } else {
-        console.log('No tasks found for this project');
-        return;
-    }
-
+    const projectTitle = document.querySelector(".project-title").textContent;
+    
+    renderMainContent(projectTitle)
+    
     // Close the task dialog
     taskDialog.close();
 });

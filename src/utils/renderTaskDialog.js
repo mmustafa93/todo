@@ -14,7 +14,7 @@ const renderTaskDialog = (task) => {
             </div>
             <div>
                 <label for="duedate">Due Date:</label>
-                <input type="text" id="duedate" name="duedate" autofocus>
+                <input type="date" id="duedate" name="duedate" autofocus>
             </div>
             <div>
                 <label for="priority">Task Description:</label>

@@ -34,16 +34,87 @@ const renderMainContent = (projectTitle = "") => {
             const taskSection = document.createElement('section');
             taskSection.id = task.id;
             taskSection.innerHTML += `
-                <h3>${task.taskTitle}</h3>
-                <p>${task.taskDescription}</p>
-                <p>${task.dueDate}</p>
-                <p>${task.priority}</p>
-                <button>Edit</button>
-                <button>Delete</button>
-            `;
+            <label for="task-title-${task.id}">Task Title:</label>
+            <input type="text" id="task-title-${task.id}" class="task-title-input" value="${task.taskTitle}" placeholder="Task Title" disabled />
+        
+            <label for="task-description-${task.id}">Task Description:</label>
+            <textarea id="task-description-${task.id}" class="task-description-input" placeholder="Task Description" disabled>${task.taskDescription}</textarea>
+        
+            <label for="task-due-date-${task.id}">Due Date:</label>
+            <input type="date" id="task-due-date-${task.id}" class="task-due-date-input" value="${task.dueDate}" disabled/>
+        
+            <label for="task-priority-${task.id}">Priority:</label>
+            <select id="task-priority-${task.id}" class="task-priority-input" disabled>
+                <option value="Low" ${task.priority === "Low" ? "selected" : ""}>Low</option>
+                <option value="Medium" ${task.priority === "Medium" ? "selected" : ""}>Medium</option>
+                <option value="High" ${task.priority === "High" ? "selected" : ""}>High</option>
+            </select>
+        
+            <button class="edit-task-btn">Edit</button>
+            <button class="delete-task-btn">Delete</button>
+
+            <button class="add-subtask">Add Subtask</button>
+        `;
             mainContent.appendChild(taskSection);
         });
     }
+
+    const editTaskBtns = document.querySelectorAll(".edit-task-btn");
+
+if (editTaskBtns) {
+    editTaskBtns.forEach((editTaskBtn) => {
+        const taskId = editTaskBtn.parentElement.id;
+
+        editTaskBtn.addEventListener("click", () => {
+            const parentContainer = editTaskBtn.parentElement;
+
+            // Select all inputs, textareas, and selects within the parent container
+            const inputs = parentContainer.querySelectorAll("input, textarea, select");
+
+            if (editTaskBtn.textContent === "Edit") {
+                console.log("Edit button clicked");
+
+                // Enable the inputs for editing
+                inputs.forEach((input) => {
+                    input.disabled = false;
+                });
+
+                // Change button text to "Save"
+                editTaskBtn.textContent = "Save";
+            } else if (editTaskBtn.textContent === "Save") {
+                console.log("Save button clicked");
+
+                // Gather updated values from the inputs
+                const updatedFields = {
+                    taskTitle: document.getElementById(`task-title-${taskId}`).value,
+                    taskDescription: document.getElementById(`task-description-${taskId}`).value,
+                    dueDate: document.getElementById(`task-due-date-${taskId}`).value,
+                    priority: document.getElementById(`task-priority-${taskId}`).value,
+                };
+
+                // Disable the inputs after saving
+                inputs.forEach((input) => {
+                    input.disabled = true;
+                });
+
+                // Update the task in TaskManager
+                const allTasks = TaskManager.loadTasks().map((task) => task.getTask());
+                const currentTask = allTasks.find((task) => task.id === taskId);
+
+                if (currentTask) {
+                    TaskManager.updateTask({ ...currentTask, ...updatedFields });
+                    console.log(`Task with ID "${taskId}" updated successfully.`);
+                } else {
+                    console.error(`Task with ID "${taskId}" not found.`);
+                }
+
+                // Change button text back to "Edit"
+                editTaskBtn.textContent = "Edit";
+            }
+        });
+    });
+}
+    
     const editProjectTitleBtn = document.querySelector('.edit-project-title');
     if (editProjectTitleBtn) {
         editProjectTitleBtn.addEventListener('click', () => {

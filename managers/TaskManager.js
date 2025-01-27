@@ -54,19 +54,19 @@ const TaskManager = (() => {
 
   const getTasks = () => loadTasks();
 
-  const updateTask = (taskId, updatedFields) => {
-    let tasks = loadTasks();
-    const task = tasks.find((task) => task.getTask().id === taskId);
-
-    if (task) {
-      task.updateTask(updatedFields);
-      saveTasks(tasks);
-      console.log(`Task with ID "${taskId}" updated successfully.`);
+  const updateTask = (taskToUpdate) => {
+    let tasks = loadTasks()
+    const taskIndex = tasks.findIndex((task) => task.getTask().id === taskToUpdate.id);
+    if (taskIndex !== -1) {
+      // Update the specific task
+      tasks[taskIndex].updateTask(taskToUpdate); // Use the factory method
+      saveTasks(tasks); // Save updated tasks back to local storage
+      console.log(`Task with ID "${taskToUpdate.id}" updated successfully.`);
       return true;
-    } else {
-      console.log(`Task with ID "${taskId}" not found.`);
+  } else {
+      console.log(`Task with ID "${taskToUpdate.id}" not found.`);
       return false;
-    }
+  }
   };
 
   return { addTask, deleteTask, getTasksByProject, getTasks, updateTask, loadTasks };
