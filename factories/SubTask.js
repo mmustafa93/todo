@@ -5,15 +5,14 @@ const generateId = () => {
 };
 
 
-const SubTask = (existingId = null, parentTaskTitle, subTaskDescription, isComplete = false) => {
+const SubTask = (existingId = null, parentTaskId, subTaskDescription) => {
   
   const id = existingId || generateId();
   
   let subTaskDetails = {
       id,
-      parentTaskTitle,
+      parentTaskId,
       subTaskDescription,
-      isComplete,
     };
   
     const getSubTask = () => subTaskDetails;
