@@ -12,7 +12,8 @@ const TaskManager = (() => {
             taskData.taskTitle,
             taskData.taskDescription,
             taskData.dueDate,
-            taskData.priority
+            taskData.priority,
+            taskData.isCompleted,
         )
 
         return task; // return Task instance

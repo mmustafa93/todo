@@ -79,7 +79,8 @@ li {
 }
 
 .project-btns button,
-.task-btns button {
+.task-btns button,
+.title-container button {
     border-radius: 10%;
     width: 22%;
 }
@@ -96,4 +97,10 @@ li {
 
 .is-task-complete {
     display: flex;
+}
+
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

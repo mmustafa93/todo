@@ -1,5 +1,6 @@
 import { deleteProject } from './deleteProject.js';
 import ProjectManager from '../../managers/ProjectManager.js';
+import Task from "../../factories/Task.js"
 import TaskManager from '../../managers/TaskManager.js';
 import { renderProjectsList } from './renderProjectsList.js';
 import { viewProjects } from './viewProjects.js';
@@ -24,9 +25,11 @@ const renderMainContent = (projectTitle = "") => {
         const projectId = ProjectManager.loadProjects().find(project => project.title === projectTitle).id;
         
         mainContent.innerHTML = `
-            <h2 class="project-title" id=${projectId}>${projectTitle}</h2>
+            <div class="title-container">
+                <h2 class="project-title" id=${projectId}>${projectTitle}</h2>
+                ${projectTitle !== "Default" ? `<button class="edit-project-title">Edit Project Title</button>` : ""}
+            </div>
             <div class="project-btns">
-            ${projectTitle !== "Default" ? `<button class="edit-project-title">Edit Project Title</button>` : ""}
             <button class="add-task-btn">Add Task</button>
             ${projectTitle !== "Default" ? `<button class="delete-project-btn">Delete Project</button>` : ""}
             </div>
@@ -38,22 +41,7 @@ const renderMainContent = (projectTitle = "") => {
         renderTasks(currentProjectTasks)
     }
 
-    const addSubTaskBtns = document.querySelectorAll('.add-subtask');
-    if (addSubTaskBtns){
-        addSubTaskBtns.forEach((addSubTaskBtn) => {
-            addSubTaskBtn.addEventListener("click", () => {
-                console.log("subtask btn clicked")
-                const parentContainer = addSubTaskBtn.parentElement;
-                parentContainer.innerHTML += `
-                <label for="sub-task-description">Sub-Task Description:</label>
-                <textarea id="sub-task-description" class="task-description-input" placeholder="Sub-Task Description"></textarea>
-                <button class="save-subtask">Save</button>
-                `
-            })
-            
-        });
-    }
-
+    
     const deleteTasksBtns = document.querySelectorAll(".delete-task-btn");
 
     if (deleteTasksBtns){
@@ -107,6 +95,7 @@ const renderMainContent = (projectTitle = "") => {
                         taskDescription: document.getElementById(`task-description-${taskId}`).value,
                         dueDate: document.getElementById(`task-due-date-${taskId}`).value,
                         priority: document.getElementById(`task-priority-${taskId}`).value,
+                        isCompleted: document.getElementById(`task-complete-${taskId}`).checked,
                     };
 
                     // Disable the inputs after saving
@@ -135,8 +124,21 @@ const renderMainContent = (projectTitle = "") => {
     const taskCheckBoxes = document.querySelectorAll('.checkbox-task');
     if (taskCheckBoxes) {
         taskCheckBoxes.forEach((taskCheckBox) => {
+            const taskId = taskCheckBox.parentElement.parentElement.id;
+            
             taskCheckBox.addEventListener('change', () => {
+                
                 taskCheckBox.parentElement.parentElement.style.backgroundColor = taskCheckBox.checked ? "gray" : "";
+                const updatedFields = {
+                    taskTitle: document.getElementById(`task-title-${taskId}`).value,
+                    taskDescription: document.getElementById(`task-description-${taskId}`).value,
+                    dueDate: document.getElementById(`task-due-date-${taskId}`).value,
+                    priority: document.getElementById(`task-priority-${taskId}`).value,
+                    isCompleted: document.getElementById(`task-complete-${taskId}`).checked,
+                };
+                const allTasks = TaskManager.loadTasks().map((task) => task.getTask());
+                const currentTask = allTasks.find((task) => task.id === taskId);
+                TaskManager.updateTask({ ...currentTask, ...updatedFields })
             });
         });
     }

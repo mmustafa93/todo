@@ -31,11 +31,10 @@ const renderTasks = (currentProjectTasks) => {
     </select>
     <div class="is-task-complete">
         <input id="task-complete-${task.id}" type="checkbox" class="checkbox-task" unchecked/>
-        <label for"task-complte-${task.id}">Complete</label>
+        <label for"task-complete-${task.id}">Complete</label>
     </div>
     <div class="task-btns">
         <button class="edit-task-btn">Edit Task</button>
-        <button class="add-subtask">Add Subtask</button>
         <button class="delete-task-btn">Delete Task</button>
     </div>
 `
