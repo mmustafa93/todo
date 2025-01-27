@@ -20,14 +20,17 @@ const mainContent = document.getElementById('content');
 
 renderMainContent();
 
-export const taskListener = (addTaskBtn) => addTaskBtn.addEventListener('click', () => {
-    document.getElementById('task-title').value = '';
-    document.getElementById('description').value = '';
-    document.getElementById('duedate').value = '';
-    document.getElementById('priority').value = 'low';
-    taskDialog.showModal();
-    console.log('Add task button clicked');
-})
+export const taskListener = (addTaskBtn) => addTaskBtn ? addTaskBtn.addEventListener('click', (event) => {
+    if (event.target && event.target.classList.contains("add-task-btn")){
+        document.getElementById('task-title').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('duedate').value = '';
+        document.getElementById('priority').value = 'low';
+        const taskDialog = document.getElementById('task-dialog');
+        taskDialog.showModal();
+        console.log('Add task button clicked');
+    }
+}) : ''
 
 const addProjectBtn = document.getElementsByClassName("add-project-btn");
 
@@ -99,4 +102,31 @@ saveTaskBtn.addEventListener('click', (event) => {
     
     // Close the task dialog
     taskDialog.close();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const projectBtns = document.querySelector('.project-btns');
+    const pageTitle = document.querySelector(".project-title");
+    const editProjectTitleBtn = document.querySelector(".edit-project-title");
+
+    console.log(projectBtns); // Should log the elements or null if they still don't exist
+    console.log(editProjectTitleBtn);
+    console.log(pageTitle);
+});
+
+const waitForElement = (selector, callback) => {
+    const observer = new MutationObserver(() => {
+        const element = document.querySelector(selector);
+        if (element) {
+            observer.disconnect();
+            callback(element);
+        }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+};
+
+// Example: Wait for ".project-btns" to be available
+waitForElement('.project-btns', (element) => {
+    console.log("Found element:", element);
 });

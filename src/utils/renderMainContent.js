@@ -9,7 +9,7 @@ import { renderTasks } from "./renderTasks.js"
 
 const renderMainContent = (projectTitle = "") => {
     const mainContent = document.getElementById('content');
-    const tasksContainer = document.getElementById("task-list")
+    const tasksContainer = document.querySelector(".task-list")
     console.log(tasksContainer)
     const renderWelcomeMessage = () => {
         const welcomeHeading = document.createElement('h1');
@@ -33,7 +33,7 @@ const renderMainContent = (projectTitle = "") => {
             <button class="add-task-btn">Add Task</button>
             ${projectTitle !== "Default" ? `<button class="delete-project-btn">Delete Project</button>` : ""}
             </div>
-            <div id="task-list"></div>
+            <div class="task-list"></div>
         `;
 
         const allTasks = TaskManager.loadTasks().map((task) => task.getTask());

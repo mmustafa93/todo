@@ -4,13 +4,11 @@ import TaskManager from "../../managers/TaskManager.js";
 
 const renderTasks = (currentProjectTasks) => {
     
-    const tasksContainer = document.getElementById("task-list")
+    const tasksContainer = document.querySelector(".task-list")
     tasksContainer.innerHTML = '';
     const reversedTasks = [...currentProjectTasks].reverse();
     console.log(currentProjectTasks)
     reversedTasks.forEach((task) => {
-    
-
     const taskSection = document.createElement('section');
     taskSection.id = task.id;
     taskSection.innerHTML += `
