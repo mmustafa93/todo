@@ -8,6 +8,7 @@ import { renderProjectsList } from './utils/renderProjectsList.js';
 import { renderProjectDialog } from './utils/renderProjectDialog.js';
 import { renderTaskDialog } from './utils/renderTaskDialog.js';
 import { renderMainContent } from './utils/renderMainContent.js';
+import { viewProjects } from './utils/viewProjects.js';
 
 createSideBar();
 renderProjectDialog();
@@ -19,7 +20,7 @@ const mainContent = document.getElementById('content');
 
 renderMainContent();
 
-const taskListener = (addTaskBtn) => addTaskBtn.addEventListener('click', () => {
+export const taskListener = (addTaskBtn) => addTaskBtn.addEventListener('click', () => {
     document.getElementById('task-title').value = '';
     document.getElementById('description').value = '';
     document.getElementById('duedate').value = '';
@@ -58,35 +59,12 @@ saveProjectBtn.addEventListener('click', (event) => {
     projectDialog.close();
     renderMainContent(projectTitle);
     viewProjects()
+    taskListener(document.querySelector('.add-task-btn'));
     console.log('Save project button clicked');
     console.log(ProjectManager.loadProjects()[0].title);
 });
 
-const viewProjects = () => {
-    const viewProjectsBtn = document.querySelectorAll('.project-item-btn');
-    viewProjectsBtn.forEach((button) => {
-    button.addEventListener('click', (event) => {
-        const allTasks = TaskManager.loadTasks();
-        let currentSavedTasks = []
-        allTasks.forEach((task) => {
-            currentSavedTasks.push(task.getTask());
-            //console.log(tData);
-        }); 
-    
-        // Filter tasks for the current project
-        const currentProjectTasks = currentSavedTasks.filter((task) => task.projectTitle === event.target.textContent);
-        console.log(currentProjectTasks);
-        renderMainContent(event.target.textContent, currentProjectTasks);
-        
-        const addTaskBtn = document.querySelector('.add-task-btn');
-        console.log(addTaskBtn);
-        taskListener(addTaskBtn);
-    });
-});
-}
-
 viewProjects();
-
 
 const cancelTaskBtn = document.getElementById('cancel-task-btn');
 cancelTaskBtn.addEventListener('click', (event) => {

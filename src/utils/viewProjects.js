@@ -1,5 +1,6 @@
 import { renderMainContent } from "./renderMainContent.js";
 import TaskManager from "../../managers/TaskManager.js";
+import { taskListener } from "../index.js";
 
 const viewProjects = () => {
     const viewProjectsBtn = document.querySelectorAll('.project-item-btn');
@@ -19,6 +20,7 @@ const viewProjects = () => {
         
         const addTaskBtn = document.querySelector('.add-task-btn');
         console.log(addTaskBtn);
+        taskListener(addTaskBtn);
         
     });
 });
