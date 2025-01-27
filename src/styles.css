@@ -67,3 +67,33 @@ li {
     display: none;
 }
 
+#content {
+    padding: 4rem;
+}
+
+.project-btns,
+.task-btns {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.project-btns button,
+.task-btns button {
+    border-radius: 10%;
+    width: 22%;
+}
+
+#task-list section{
+    margin: 1rem 0;
+}
+
+#task-list section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.is-task-complete {
+    display: flex;
+}

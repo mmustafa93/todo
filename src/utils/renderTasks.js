@@ -29,21 +29,22 @@ const renderTasks = (currentProjectTasks) => {
         <option value="Medium" ${task.priority === "Medium" ? "selected" : ""}>Medium</option>
         <option value="High" ${task.priority === "High" ? "selected" : ""}>High</option>
     </select>
-
-    <label for"task-complte-${task.id}">Complete</label>
-    <input id="task-complete-${task.id}" type="checkbox" class="checkbox-task" unchecked/>
-
-    <button class="edit-task-btn">Edit</button>
-    <button class="delete-task-btn">Delete</button>
-
-    <button class="add-subtask">Add Subtask</button>
+    <div class="is-task-complete">
+        <input id="task-complete-${task.id}" type="checkbox" class="checkbox-task" unchecked/>
+        <label for"task-complte-${task.id}">Complete</label>
+    </div>
+    <div class="task-btns">
+        <button class="edit-task-btn">Edit Task</button>
+        <button class="add-subtask">Add Subtask</button>
+        <button class="delete-task-btn">Delete Task</button>
+    </div>
 `
     tasksContainer.appendChild(taskSection);
     
     const addTaskBtn = document.querySelector(".add-task-btn");
     taskListener(addTaskBtn);
     const deleteTaskBtn = document.querySelector(".delete-task-btn");
-    const taskId = deleteTaskBtn.parentElement.id;
+    const taskId = deleteTaskBtn.parentElement.parentElement.id;
     const projectId = document.querySelector(".project-title").id;
 
     

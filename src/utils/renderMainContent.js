@@ -25,9 +25,11 @@ const renderMainContent = (projectTitle = "") => {
         
         mainContent.innerHTML = `
             <h2 class="project-title" id=${projectId}>${projectTitle}</h2>
+            <div class="project-btns">
             ${projectTitle !== "Default" ? `<button class="edit-project-title">Edit Project Title</button>` : ""}
             <button class="add-task-btn">Add Task</button>
             ${projectTitle !== "Default" ? `<button class="delete-project-btn">Delete Project</button>` : ""}
+            </div>
             <div id="task-list"></div>
         `;
 
@@ -77,15 +79,16 @@ const renderMainContent = (projectTitle = "") => {
 
     if (editTaskBtns) {
         editTaskBtns.forEach((editTaskBtn) => {
-            const taskId = editTaskBtn.parentElement.id;
+            const taskId = editTaskBtn.parentElement.parentElement.id;
+            console.log(taskId)
 
             editTaskBtn.addEventListener("click", () => {
-                const parentContainer = editTaskBtn.parentElement;
-
+                const parentContainer = editTaskBtn.parentElement.parentElement;
+                console.log(parentContainer)
                 // Select all inputs, textareas, and selects within the parent container
                 const inputs = parentContainer.querySelectorAll("input, textarea, select");
 
-                if (editTaskBtn.textContent === "Edit") {
+                if (editTaskBtn.textContent === "Edit Task") {
                     console.log("Edit button clicked");
 
                     // Enable the inputs for editing
@@ -123,7 +126,7 @@ const renderMainContent = (projectTitle = "") => {
                     }
 
                     // Change button text back to "Edit"
-                    editTaskBtn.textContent = "Edit";
+                    editTaskBtn.textContent = "Edit Task";
                 }
             });
         });
@@ -133,7 +136,7 @@ const renderMainContent = (projectTitle = "") => {
     if (taskCheckBoxes) {
         taskCheckBoxes.forEach((taskCheckBox) => {
             taskCheckBox.addEventListener('change', () => {
-                taskCheckBox.parentElement.style.backgroundColor = taskCheckBox.checked ? "gray" : "";
+                taskCheckBox.parentElement.parentElement.style.backgroundColor = taskCheckBox.checked ? "gray" : "";
             });
         });
     }
