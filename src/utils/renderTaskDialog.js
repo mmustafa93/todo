@@ -24,9 +24,9 @@ const renderTaskDialog = (task) => {
                     <option value="high">High</option>
                 </select>
             </div>
-            <div>
+            <div class="form-btns">
+                <button id="save-task-btn">Save</button>    
                 <button id="cancel-task-btn">Cancel</button>
-                <button id="save-task-btn">Save</button>
             </div>
         </form>
     `

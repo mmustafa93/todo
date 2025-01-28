@@ -3,9 +3,17 @@ import ProjectManager from "../../managers/ProjectManager.js";
 import TaskManager from "../../managers/TaskManager.js";
 
 const renderTasks = (currentProjectTasks) => {
-    
-    const tasksContainer = document.querySelector(".task-list")
-    tasksContainer.innerHTML = '';
+    let tasksContainer;
+    tasksContainer = document.querySelector(".task-list")
+    if (tasksContainer){
+        tasksContainer.innerHTML = '';
+    } else {
+        const tasksContainerElement = document.createElement('div');
+        tasksContainerElement.classList.add('task-list');
+        const mainContent = document.querySelector('#content');
+        mainContent.appendChild(tasksContainerElement);
+        tasksContainer = document.querySelector(".task-list");
+    }
     const reversedTasks = [...currentProjectTasks].reverse();
     console.log(currentProjectTasks)
     reversedTasks.forEach((task) => {
@@ -36,23 +44,30 @@ const renderTasks = (currentProjectTasks) => {
         <button class="delete-task-btn">Delete Task</button>
     </div>
 `
-    tasksContainer.appendChild(taskSection);
+    if (tasksContainer){
+        tasksContainer.appendChild(taskSection);
+    }
     
     const addTaskBtn = document.querySelector(".add-task-btn");
     taskListener(addTaskBtn);
     const deleteTaskBtn = document.querySelector(".delete-task-btn");
-    const taskId = deleteTaskBtn.parentElement.parentElement.id;
-    const projectId = document.querySelector(".project-title").id;
-
-    
-    deleteTaskBtn.addEventListener('click', () => {
-        TaskManager.deleteTask(taskId);
-        const allTasks = TaskManager.loadTasks().map((task) => task.getTask());
-        console.log(allTasks)
-        const currentProjectTasks = allTasks.filter((task) => task.projectId === projectId);
-        console.log(currentProjectTasks)
-        renderTasks(currentProjectTasks);
-    })
+    let taskId;
+    if (deleteTaskBtn){
+        taskId = deleteTaskBtn.parentElement.parentElement.id;
+        deleteTaskBtn.addEventListener('click', () => {
+            TaskManager.deleteTask(taskId);
+            const allTasks = TaskManager.loadTasks().map((task) => task.getTask());
+            console.log(allTasks)
+            const currentProjectTasks = allTasks.filter((task) => task.projectId === projectId);
+            console.log(currentProjectTasks)
+            renderTasks(currentProjectTasks);
+        })
+    }
+    const project = document.querySelector(".project-title");
+    let projectId;
+    if (project){
+        projectId = project.id;
+    }
 })};
 
 export { renderTasks }

@@ -6,7 +6,7 @@ body {
 
 header {
     background-color: antiquewhite;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -25,6 +25,26 @@ ul li,
 .tasks-section-btn,
 .project-item-btn  {
     padding-left: 27px;
+}
+
+#task-dialog,
+#project-dialog {
+    min-width: 25%;
+}
+
+#task-dialog form div,
+#project-dialog form div {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+    gap: 5px;
+}
+
+#task-dialog .form-container .form-btns,
+#project-dialog .form-container .form-btns {
+    flex-direction: row;
+    gap: 10px;
+    border-radius: 10px;
 }
 
 .tasks-section {

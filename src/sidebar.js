@@ -3,7 +3,7 @@ import ProjectManager from '../managers/ProjectManager.js';
 import Project from '../factories/Project.js';
 import { renderProjectsList } from './utils/renderProjectsList.js';
 import TaskManager from '../managers/TaskManager.js';
-import { renderTasks } from './utils/renderTasks.js';
+import { renderMainContent } from './utils/renderMainContent.js';
 
 const sidebar = document.getElementById('nav');
 
@@ -30,51 +30,13 @@ const createSideBar = () => {
 
     //const tasksBtns = document.querySelectorAll('.tasks-section-btn');
     taskButtons.forEach((btn) => {
-        
-        const projectBtns = document.querySelector('.project-btns');
-        const pageTitle = document.querySelector(".project-title");
-        const editProjectTitleBtn = document.querySelector(".edit-project-title");
-        const allTasks = TaskManager.loadTasks().map((task) => task.getTask());
-
-        // Helper function to check if two dates are the same day
-        const isSameDay = (date1, date2) => {
-            return date1.getFullYear() === date2.getFullYear() &&
-                date1.getMonth() === date2.getMonth() &&
-                date1.getDate() === date2.getDate();
-        };
-
-        // Get today's date and the date seven days from now
-        const today = new Date();
-        const sevenDaysFromNow = new Date();
-        sevenDaysFromNow.setDate(today.getDate() + 7);
-
-        // Filter tasks due today
-        const tasksDueToday = allTasks.filter((task) => {
-            const taskDueDate = new Date(task.dueDate); // Convert due date to a Date object
-            return isSameDay(taskDueDate, today);
-        });
-
-        // Filter tasks due in the next seven days
-        const tasksDueWeek = allTasks.filter((task) => {
-            const taskDueDate = new Date(task.dueDate); // Convert due date to a Date object
-            return taskDueDate > today && taskDueDate <= sevenDaysFromNow;
-        });
-        
         btn.addEventListener('click', () => {
-            console.log(projectBtns);
-            console.log(editProjectTitleBtn);
-            console.log(pageTitle);
-            //projectBtns.style.display = "none";
-            //editProjectTitleBtn.style.display = "none";
             if (btn.textContent === 'Due Today'){
-                //pageTitle.textContent = 'Due Today'
-                renderTasks(tasksDueToday)
+                renderMainContent('Due Today')
             } else if (btn.textContent === 'Next 7 Days'){
-                //pageTitle.textContent = 'Next 7 Days'
-                renderTasks(tasksDueWeek)
+                renderMainContent('Next 7 Days')
             } else {
-                //pageTitle.textContent = 'All Tasks'
-                renderTasks(allTasks)
+                renderMainContent('All Tasks')
             }
         })
     })

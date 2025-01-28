@@ -10,7 +10,42 @@ import { renderTasks } from "./renderTasks.js"
 const renderMainContent = (projectTitle = "") => {
     const mainContent = document.getElementById('content');
     const tasksContainer = document.querySelector(".task-list")
-    console.log(tasksContainer)
+    
+    const allTasks = TaskManager.loadTasks().map((task) => task.getTask());
+
+     // Helper function to check if two dates are the same day
+     const isSameDay = (date1, date2) => {
+        return date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate();
+    };
+
+    // Get today's date and the date seven days from now
+    const today = new Date();
+    const sevenDaysFromNow = new Date();
+    sevenDaysFromNow.setDate(today.getDate() + 7);
+
+    // Filter tasks due today
+    const tasksDueToday = allTasks.filter((task) => {
+        const taskDueDate = new Date(task.dueDate); // Convert due date to a Date object
+        return isSameDay(taskDueDate, today);
+    });
+
+    // Filter tasks due in the next seven days
+    const tasksDueWeek = allTasks.filter((task) => {
+        const taskDueDate = new Date(task.dueDate); // Convert due date to a Date object
+        return taskDueDate > today && taskDueDate <= sevenDaysFromNow;
+    });
+
+    const tasksHeader = (heading) => {
+        return `
+        <div class="title-container">
+            <h2 class="project-title">${heading}</h2>
+        </div>
+        <div class="task-list"></div>
+    `
+    }
+
     const renderWelcomeMessage = () => {
         const welcomeHeading = document.createElement('h1');
         welcomeHeading.textContent = 'Welcome to your To Do App!';
@@ -20,6 +55,15 @@ const renderMainContent = (projectTitle = "") => {
     if (!projectTitle) {
         mainContent.textContent = "";
         renderWelcomeMessage();
+    } else if (projectTitle === 'Due Today') {
+        tasksHeader(projectTitle);
+        renderTasks(tasksDueToday);
+    } else if (projectTitle === 'Next 7 Days') {
+        tasksHeader(projectTitle);
+        renderTasks(tasksDueWeek);
+    } else if (projectTitle === 'All Tasks') {
+        tasksHeader(projectTitle);
+        renderTasks(allTasks)
     } else {
         mainContent.textContent = "";
         const projectId = ProjectManager.loadProjects().find(project => project.title === projectTitle).id;
@@ -49,7 +93,11 @@ const renderMainContent = (projectTitle = "") => {
             const taskSection = deleteTaskBtn.parentElement;
             const taskId = taskSection.id;
 
-            const projectId = ProjectManager.loadProjects().find(project => project.title === projectTitle).id;
+            const project = ProjectManager.loadProjects().find(project => project.title === projectTitle);
+            let projectId;
+            if (project){
+                projectId = project.id;
+            }
         
             deleteTaskBtn.addEventListener('click', () => {
                 TaskManager.deleteTask(taskId);

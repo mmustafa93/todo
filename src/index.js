@@ -49,6 +49,9 @@ const saveProjectBtn = document.getElementById('save-project-btn');
 saveProjectBtn.addEventListener('click', (event) => {
     event.preventDefault();
     const projectTitle = document.getElementById('project-title').value;
+    if (!projectTitle){
+        alert('The project title cannot be empty!')
+    }
     const savedProjects = ProjectManager.loadProjects();
     const isTitleTaken = savedProjects.some((project) => project.title === projectTitle);
     if (isTitleTaken){
@@ -104,29 +107,3 @@ saveTaskBtn.addEventListener('click', (event) => {
     taskDialog.close();
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    const projectBtns = document.querySelector('.project-btns');
-    const pageTitle = document.querySelector(".project-title");
-    const editProjectTitleBtn = document.querySelector(".edit-project-title");
-
-    console.log(projectBtns); // Should log the elements or null if they still don't exist
-    console.log(editProjectTitleBtn);
-    console.log(pageTitle);
-});
-
-const waitForElement = (selector, callback) => {
-    const observer = new MutationObserver(() => {
-        const element = document.querySelector(selector);
-        if (element) {
-            observer.disconnect();
-            callback(element);
-        }
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-};
-
-// Example: Wait for ".project-btns" to be available
-waitForElement('.project-btns', (element) => {
-    console.log("Found element:", element);
-});

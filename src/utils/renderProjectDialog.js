@@ -8,9 +8,9 @@ const renderProjectDialog = () => {
                 <label for="project-title">Project Title:</label>
                 <input type="text" id="project-title" name="project-title" autofocus>
             </div>
-            <div>
-                <button id="cancel-project-btn">Cancel</button>
+            <div class="form-btns">
                 <button id="save-project-btn">Save</button>
+                <button id="cancel-project-btn">Cancel</button>
             </div>
         </form>
     `
